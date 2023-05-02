@@ -1,0 +1,26 @@
+< THE SYMBOL TABLE >  firstTrial.exe  --  emu8086 assembler version: 4.08 
+===================================================================================================
+Name                     	Offset    	Size      	Type      	Segment   
+===================================================================================================
+STACK                    	00000     	-5        	SEGMENT   	(ITSELF)  
+DATA                     	00010     	-5        	SEGMENT   	(ITSELF)  
+MESSAGE1                 	00000     	1         	VAR       	data      
+MESSAGE2                 	00015     	1         	VAR       	data      
+MESSAGE3                 	0002B     	1         	VAR       	data      
+MESSAGE4                 	00032     	1         	VAR       	data      
+MESSAGE5                 	0003E     	1         	VAR       	data      
+MESSAGE6                 	0004A     	1         	VAR       	data      
+MESSAGE7                 	00054     	1         	VAR       	data      
+RESULT                   	00068     	1         	VAR       	data      
+CODE                     	00018     	-5        	SEGMENT   	(ITSELF)  
+MAIN                     	00000     	-1        	NEAR      	code      
+ADD_NUMBERS              	00058     	-1        	LABEL     	code      
+SUBTRACT_NUMBERS         	0005E     	-1        	LABEL     	code      
+MULTIPLY_NUMBERS         	00064     	-1        	LABEL     	code      
+DIVIDE_NUMBERS           	0006A     	-1        	LABEL     	code      
+DISPLAY_RESULT           	00071     	-1        	LABEL     	code      
+EXIT_PROGRAM             	0008E     	-1        	LABEL     	code      
+===================================================================================================
+[ 5/2/2023  --  2:23:18 AM ] 
+< END >
+ 
