@@ -10,8 +10,9 @@ org 100h
   totalSumOfInput   dw 0h 
   latestInput       dw ?
   totalAverage      dw 0h
- 
-  resultOfCalculationMessage   dw   10,13, 'the average of the input is :$'
+  newLine           dw 10,13,'$'
+
+  resultOfCalculationMessage   dw   10,13, '    AVERAGE: $'
   continuationChoice           dw   10,13, 'enter more numbers for average (1)    show average and end program (0)',10,13,'$'                                                
   enterInput                   dw   10,13, 'enter input for average: ',10,13 ,'$'
   
@@ -24,14 +25,21 @@ org 100h
   verySatisfactoryMessage     db 10,13, 'Your grades have exceeded expectations, Congratulations for your Hard Work!$'
 
   ;message for showing subjects needing grades.
-  allSubjectsBlank dw  10,13,'1: MATH : ',10,13,'2: ENGLISH : ',10,13,'3: SCIENCE : ',10,13,'4: PHYSICAL EDUCATION : ',10,13,'5: ARALING PANLIPUNAN : ','$'
+  allSubjectsBlank dw  10,13,'1: MATH : ??? ',10,13,'2: ENGLISH : ??? ',10,13,'3: SCIENCE : ??? ',10,13,'4: PHYSICAL EDUCATION : ??? ',10,13,'5: ARALING PANLIPUNAN : ??? ','$'
+  
+  promptForMathInput         db 10,13,' 1: MATH : $'
+  promptForEnglishInput      db '2: ENGLISH : $'
+  promptForScienceInput      db '3: SCIENCE : $'
+  promptForPhycicalEducInput db '4: PHYSICAL EDUCATION : $'
+  promptForAralPanInput      db '5: ARALING PANLIPUNAN : $'
+  
 
   ;variables holding the grades 
-  mathGrade              db ?
-  scienceGrade           db ?
-  englishGrade           db ?
-  aralPanGrade           db ?
-  physicalEducationGrade db ?
+  mathGrade              dw 0h
+  scienceGrade           dw 0h
+  englishGrade           dw 0h
+  aralPanGrade           dw 0h
+  physicalEducationGrade dw 0h
 
 
 .code       ;Code Segment
@@ -40,6 +48,18 @@ org 100h
       
     MOV AX, @data
     MOV DS, AX
+
+    call gradesInput
+    
+    ;end code
+    mov ah, 4ch
+    int 21h
+    
+    ret
+  MAIN ENDP 
+
+  average PROC
+
 
     jmp entryOfInput 
         
@@ -107,12 +127,111 @@ org 100h
       
       call gradeEvaluation
       
-      ;END THE PROGRAM 
-      mov ah, 4ch
-      int 21h
-  MAIN ENDP    
+      ret
+  average ENDP    
+  
+  averageFinderForGrades proc 
+    
+    mov ax, mathgrade
+    add ax, scienceGrade
+    add ax, englishGrade
+    add ax, aralPanGrade
+    add ax, physicalEducationGrade
+    
+    mov dx,0
+    mov bx, 05h
+    div bx
+    
+    mov totalaverage, ax
+
+
+    mov dx, offset resultOfCalculationMessage
+    mov ah,09h
+    int 21h
+
+    mov ax, totalaverage
+    call print_num 
+
+    ret 
+  averageFinderForGrades endp 
+
+  gradesInput proc 
 
     
+    mov dx, offset allSubjectsBlank
+    mov ah,9h
+    int 21h
+    
+    mov dx, offset promptForMathInput
+    mov ah,9h
+    int 21h
+
+    call scan_num
+    
+    mov mathgrade,cx
+
+    mov dx, offset newLine
+    mov ah,9h
+    int 21h
+
+
+    mov dx, offset promptForEnglishInput
+    mov ah,9h
+    int 21h
+
+    call scan_num
+    
+    mov englishgrade,cx
+
+    mov dx, offset newLine
+    mov ah,9h
+    int 21h
+
+
+    mov dx, offset promptForScienceInput
+    mov ah,9h
+    int 21h
+
+    call scan_num
+    
+    mov scienceGrade,cx
+
+    mov dx, offset newLine
+    mov ah,9h
+    int 21h
+
+
+    mov dx, offset promptforphycicaleducinput
+    mov ah,9h
+    int 21h
+
+    call scan_num
+    
+    mov physicaleducationgrade,cx
+
+    mov dx, offset newLine
+    mov ah,9h
+    int 21h
+
+
+
+    mov dx, offset promptForAralPanInput
+    mov ah,9h
+    int 21h
+
+    call scan_num
+    
+    mov aralpangrade,cx
+
+    mov dx, offset newLine
+    mov ah,9h
+    int 21h
+
+    call averageFinderForGrades
+    call gradeEvaluation
+    ret
+  gradesInput endp 
+  
   gradeEvaluation proc
   
     mov bx, totalaverage
@@ -147,6 +266,7 @@ org 100h
       jge gradeSatisfactory
         
     gradeVerySatisfactory:
+
       mov dx, offset verySatisfactoryMessage  
       mov ah,09h
       int 21h
@@ -166,7 +286,7 @@ org 100h
       int 21h 
       jmp closetheprogram
 
-    closeTheProgram:
+    closetheprogram:
       ret ; RETURN CONTROL TO THE CALLER OF THE PROCEDURE, 
           ; WARNING: THE EXIT OF THE PROGRAM CANNOT BE PLACED ON 
           ; ANOTHER PROCEDURE, IT MUST BE WITHIN THE MAIN PROCEDURE
